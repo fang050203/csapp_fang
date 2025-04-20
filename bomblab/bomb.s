@@ -359,35 +359,35 @@ Disassembly of section .text:
   4014fc:	f3 0f 1e fa          	endbr64 
   401500:	55                   	push   %rbp
   401501:	48 89 e5             	mov    %rsp,%rbp
-  401504:	be 80 21 40 00       	mov    $0x402180,%esi
-  401509:	e8 9b 06 00 00       	call   401ba9 <strings_not_equal>
+  401504:	be 80 21 40 00       	mov    $0x402180,%esi   #将要比较的字符串传入第二参数
+  401509:	e8 9b 06 00 00       	call   401ba9 <strings_not_equal>    #调用比较函数
   40150e:	85 c0                	test   %eax,%eax
   401510:	75 07                	jne    401519 <phase_0+0x1d>
-  401512:	b8 01 00 00 00       	mov    $0x1,%eax
+  401512:	b8 01 00 00 00       	mov    $0x1,%eax   #返回1表示检验通过
   401517:	5d                   	pop    %rbp
   401518:	c3                   	ret    
-  401519:	e8 9f 07 00 00       	call   401cbd <explode_bomb>
-  40151e:	b8 00 00 00 00       	mov    $0x0,%eax
-  401523:	eb f2                	jmp    401517 <phase_0+0x1b>
+  401519:	e8 9f 07 00 00       	call   401cbd <explode_bomb>    #炸弹爆炸
+  40151e:	b8 00 00 00 00       	mov    $0x0,%eax    #检验失败
+  401523:	eb f2                	jmp    401517 <phase_0+0x1b>    #返回
 
 0000000000401525 <phase_1>:
   401525:	f3 0f 1e fa          	endbr64 
   401529:	55                   	push   %rbp
   40152a:	48 89 e5             	mov    %rsp,%rbp
   40152d:	48 83 ec 10          	sub    $0x10,%rsp
-  401531:	48 8d 4d f8          	lea    -0x8(%rbp),%rcx
-  401535:	48 8d 55 fc          	lea    -0x4(%rbp),%rdx
-  401539:	be db 23 40 00       	mov    $0x4023db,%esi
-  40153e:	b8 00 00 00 00       	mov    $0x0,%eax
+  401531:	48 8d 4d f8          	lea    -0x8(%rbp),%rcx   #读入第一个参数的地址
+  401535:	48 8d 55 fc          	lea    -0x4(%rbp),%rdx    #读入第二个参数的地址
+  401539:	be db 23 40 00       	mov    $0x4023db,%esi      #看是否输入了两个数字
+  40153e:	b8 00 00 00 00       	mov    $0x0,%eax     
   401543:	e8 08 fc ff ff       	call   401150 <__isoc99_sscanf@plt>
-  401548:	83 f8 02             	cmp    $0x2,%eax
+  401548:	83 f8 02             	cmp    $0x2,%eax      #比较，输入错误则引爆炸弹
   40154b:	75 1e                	jne    40156b <phase_1+0x46>
-  40154d:	81 7d fc 00 00 00 23 	cmpl   $0x23000000,-0x4(%rbp)
-  401554:	75 09                	jne    40155f <phase_1+0x3a>
-  401556:	81 7d f8 8c 45 c9 41 	cmpl   $0x41c9458c,-0x8(%rbp)
+  40154d:	81 7d fc 00 00 00 23 	cmpl   $0x23000000,-0x4(%rbp)      #比较是否相等
+  401554:	75 09                	jne    40155f <phase_1+0x3a>   #不相等则跳转到爆炸
+  401556:	81 7d f8 8c 45 c9 41 	cmpl   $0x41c9458c,-0x8(%rbp)   #比较是否相等
   40155d:	74 18                	je     401577 <phase_1+0x52>
   40155f:	e8 59 07 00 00       	call   401cbd <explode_bomb>
-  401564:	b8 00 00 00 00       	mov    $0x0,%eax
+  401564:	b8 00 00 00 00       	mov    $0x0,%eax   #检测正确则离开
   401569:	c9                   	leave  
   40156a:	c3                   	ret    
   40156b:	e8 4d 07 00 00       	call   401cbd <explode_bomb>
@@ -401,14 +401,14 @@ Disassembly of section .text:
   401582:	55                   	push   %rbp
   401583:	48 89 e5             	mov    %rsp,%rbp
   401586:	48 83 ec 20          	sub    $0x20,%rsp
-  40158a:	ba 08 00 00 00       	mov    $0x8,%edx
-  40158f:	48 8d 75 e0          	lea    -0x20(%rbp),%rsi
+  40158a:	ba 08 00 00 00       	mov    $0x8,%edx    #要读入8个数字
+  40158f:	48 8d 75 e0          	lea    -0x20(%rbp),%rsi     #传递数组首地址
   401593:	e8 a3 07 00 00       	call   401d3b <read_n_numbers>
-  401598:	85 c0                	test   %eax,%eax
+  401598:	85 c0                	test   %eax,%eax     #查看是否正确输入
   40159a:	74 16                	je     4015b2 <phase_2+0x34>
-  40159c:	83 7d e0 0a          	cmpl   $0xa,-0x20(%rbp)
+  40159c:	83 7d e0 0a          	cmpl   $0xa,-0x20(%rbp)       #数组第一个元素要为10
   4015a0:	75 06                	jne    4015a8 <phase_2+0x2a>
-  4015a2:	83 7d e4 14          	cmpl   $0x14,-0x1c(%rbp)
+  4015a2:	83 7d e4 14          	cmpl   $0x14,-0x1c(%rbp)    #数组第二个元素要为20
   4015a6:	74 18                	je     4015c0 <phase_2+0x42>
   4015a8:	e8 10 07 00 00       	call   401cbd <explode_bomb>
   4015ad:	b8 00 00 00 00       	mov    $0x0,%eax
@@ -417,20 +417,20 @@ Disassembly of section .text:
   4015b4:	e8 04 07 00 00       	call   401cbd <explode_bomb>
   4015b9:	b8 00 00 00 00       	mov    $0x0,%eax
   4015be:	eb f2                	jmp    4015b2 <phase_2+0x34>
-  4015c0:	b8 02 00 00 00       	mov    $0x2,%eax
-  4015c5:	83 f8 07             	cmp    $0x7,%eax
+  4015c0:	b8 02 00 00 00       	mov    $0x2,%eax             #循环变量i
+  4015c5:	83 f8 07             	cmp    $0x7,%eax    #当i小于等于7，则继续执行下面的代码
   4015c8:	7f 24                	jg     4015ee <phase_2+0x70>
   4015ca:	48 63 c8             	movslq %eax,%rcx
-  4015cd:	8d 50 fe             	lea    -0x2(%rax),%edx
+  4015cd:	8d 50 fe             	lea    -0x2(%rax),%edx    #将i-2，作为数组索引元素
   4015d0:	48 63 d2             	movslq %edx,%rdx
-  4015d3:	8b 54 95 e0          	mov    -0x20(%rbp,%rdx,4),%edx
-  4015d7:	d1 fa                	sar    %edx
-  4015d9:	8d 70 ff             	lea    -0x1(%rax),%esi
+  4015d3:	8b 54 95 e0          	mov    -0x20(%rbp,%rdx,4),%edx     #查找A[i-2]
+  4015d7:	d1 fa                	sar    %edx                       #A[i-2]除以2
+  4015d9:	8d 70 ff             	lea    -0x1(%rax),%esi    #将i-1作为数组索引
   4015dc:	48 63 f6             	movslq %esi,%rsi
-  4015df:	03 54 b5 e0          	add    -0x20(%rbp,%rsi,4),%edx
-  4015e3:	39 54 8d e0          	cmp    %edx,-0x20(%rbp,%rcx,4)
+  4015df:	03 54 b5 e0          	add    -0x20(%rbp,%rsi,4),%edx    #A[i-2]+A[i-1]
+  4015e3:	39 54 8d e0          	cmp    %edx,-0x20(%rbp,%rcx,4)     #与A[i]比较，不相等则爆炸
   4015e7:	75 cb                	jne    4015b4 <phase_2+0x36>
-  4015e9:	83 c0 01             	add    $0x1,%eax
+  4015e9:	83 c0 01             	add    $0x1,%eax   #若成功，i+1，继续循环
   4015ec:	eb d7                	jmp    4015c5 <phase_2+0x47>
   4015ee:	b8 01 00 00 00       	mov    $0x1,%eax
   4015f3:	eb bd                	jmp    4015b2 <phase_2+0x34>
@@ -440,17 +440,17 @@ Disassembly of section .text:
   4015f9:	55                   	push   %rbp
   4015fa:	48 89 e5             	mov    %rsp,%rbp
   4015fd:	48 83 ec 10          	sub    $0x10,%rsp
-  401601:	48 8d 4d f8          	lea    -0x8(%rbp),%rcx
+  401601:	48 8d 4d f8          	lea    -0x8(%rbp),%rcx    #代码逻辑同前，处理输入
   401605:	48 8d 55 fc          	lea    -0x4(%rbp),%rdx
-  401609:	be db 23 40 00       	mov    $0x4023db,%esi
+  401609:	be db 23 40 00       	mov    $0x4023db,%esi    #需要查看这个输入
   40160e:	b8 00 00 00 00       	mov    $0x0,%eax
   401613:	e8 38 fb ff ff       	call   401150 <__isoc99_sscanf@plt>
   401618:	83 f8 01             	cmp    $0x1,%eax
   40161b:	7e 15                	jle    401632 <phase_3+0x3d>
-  40161d:	8b 45 fc             	mov    -0x4(%rbp),%eax
-  401620:	83 e8 30             	sub    $0x30,%eax
-  401623:	83 f8 09             	cmp    $0x9,%eax
-  401626:	77 16                	ja     40163e <phase_3+0x49>
+  40161d:	8b 45 fc             	mov    -0x4(%rbp),%eax    #获取传入的第一个参数
+  401620:	83 e8 30             	sub    $0x30,%eax    #减去48
+  401623:	83 f8 09             	cmp    $0x9,%eax   #与9比较
+  401626:	77 16                	ja     40163e <phase_3+0x49>   #若大于9则炸弹爆炸
   401628:	89 c0                	mov    %eax,%eax
   40162a:	3e ff 24 c5 e0 21 40 	notrack jmp *0x4021e0(,%rax,8)
   401631:	00 
@@ -460,11 +460,11 @@ Disassembly of section .text:
   40163e:	e8 7a 06 00 00       	call   401cbd <explode_bomb>
   401643:	b8 00 00 00 00       	mov    $0x0,%eax
   401648:	eb 16                	jmp    401660 <phase_3+0x6b>
-  40164a:	b8 c6 02 00 00       	mov    $0x2c6,%eax
+  40164a:	b8 c6 02 00 00       	mov    $0x2c6,%eax     #十进制为710
   40164f:	eb 05                	jmp    401656 <phase_3+0x61>
   401651:	b8 8b 01 00 00       	mov    $0x18b,%eax
-  401656:	39 45 f8             	cmp    %eax,-0x8(%rbp)
-  401659:	75 07                	jne    401662 <phase_3+0x6d>
+  401656:	39 45 f8             	cmp    %eax,-0x8(%rbp)    #比较第二个参数是否为710
+  401659:	75 07                	jne    401662 <phase_3+0x6d>       #不相等则炸弹爆炸
   40165b:	b8 01 00 00 00       	mov    $0x1,%eax
   401660:	c9                   	leave  
   401661:	c3                   	ret    
@@ -573,40 +573,40 @@ Disassembly of section .text:
   401818:	41 5c                	pop    %r12
   40181a:	5d                   	pop    %rbp
   40181b:	c3                   	ret    
-  40181c:	8b 9d 58 ff ff ff    	mov    -0xa8(%rbp),%ebx
-  401822:	44 8b a5 5c ff ff ff 	mov    -0xa4(%rbp),%r12d
-  401829:	89 da                	mov    %ebx,%edx
-  40182b:	44 89 e6             	mov    %r12d,%esi
-  40182e:	48 8d bd 60 ff ff ff 	lea    -0xa0(%rbp),%rdi
-  401835:	e8 34 fe ff ff       	call   40166e <func4>
-  40183a:	3d a4 01 00 00       	cmp    $0x1a4,%eax
-  40183f:	75 11                	jne    401852 <phase_4+0x18d>
+  40181c:	8b 9d 58 ff ff ff    	mov    -0xa8(%rbp),%ebx    #传入用户输入的第二个参数到%rbx
+  401822:	44 8b a5 5c ff ff ff 	mov    -0xa4(%rbp),%r12d    #传入用户输入的第一个参数到%r12d
+  401829:	89 da                	mov    %ebx,%edx    #传入第3参数
+  40182b:	44 89 e6             	mov    %r12d,%esi  #传入第2参数
+  40182e:	48 8d bd 60 ff ff ff 	lea    -0xa0(%rbp),%rdi    #传入的是前面一堆push操作的首地址，应该是数组的首地址
+  401835:	e8 34 fe ff ff       	call   40166e <func4>     #调用func4
+  40183a:	3d a4 01 00 00       	cmp    $0x1a4,%eax       #比较返回值是否等于十进制420
+  40183f:	75 11                	jne    401852 <phase_4+0x18d>    #不相等则炸弹爆炸
   401841:	45 85 e4             	test   %r12d,%r12d
-  401844:	7f 18                	jg     40185e <phase_4+0x199>
-  401846:	83 fb 21             	cmp    $0x21,%ebx
-  401849:	7e 39                	jle    401884 <phase_4+0x1bf>
+  401844:	7f 18                	jg     40185e <phase_4+0x199>     #检查如果大于0则跳转
+  401846:	83 fb 21             	cmp    $0x21,%ebx            #上面比较成功后跳转到这里，继续比较第二个参数
+  401849:	7e 39                	jle    401884 <phase_4+0x1bf>     #如果比33小，跳转
   40184b:	b8 01 00 00 00       	mov    $0x1,%eax
   401850:	eb be                	jmp    401810 <phase_4+0x14b>
   401852:	e8 66 04 00 00       	call   401cbd <explode_bomb>
   401857:	b8 00 00 00 00       	mov    $0x0,%eax
   40185c:	eb b2                	jmp    401810 <phase_4+0x14b>
-  40185e:	41 8d 74 24 ff       	lea    -0x1(%r12),%esi
+  40185e:	41 8d 74 24 ff       	lea    -0x1(%r12),%esi     #用户输入第一个参数的值减1
   401863:	89 da                	mov    %ebx,%edx
-  401865:	48 8d bd 60 ff ff ff 	lea    -0xa0(%rbp),%rdi
-  40186c:	e8 fd fd ff ff       	call   40166e <func4>
-  401871:	3d a4 01 00 00       	cmp    $0x1a4,%eax
+  401865:	48 8d bd 60 ff ff ff 	lea    -0xa0(%rbp),%rdi   #仍然传入数组首地址
+  40186c:	e8 fd fd ff ff       	call   40166e <func4>   #调用func4
+  401871:	3d a4 01 00 00       	cmp    $0x1a4,%eax      #比较返回值是否等于410，若还相等则爆炸
   401876:	75 ce                	jne    401846 <phase_4+0x181>
   401878:	e8 40 04 00 00       	call   401cbd <explode_bomb>
   40187d:	b8 00 00 00 00       	mov    $0x0,%eax
   401882:	eb 8c                	jmp    401810 <phase_4+0x14b>
-  401884:	8d 53 01             	lea    0x1(%rbx),%edx
-  401887:	44 89 e6             	mov    %r12d,%esi
+  401884:	8d 53 01             	lea    0x1(%rbx),%edx   #给edx加1
+  401887:	44 89 e6             	mov    %r12d,%esi     #以下是继续调用func4
   40188a:	48 8d bd 60 ff ff ff 	lea    -0xa0(%rbp),%rdi
   401891:	e8 d8 fd ff ff       	call   40166e <func4>
-  401896:	3d a4 01 00 00       	cmp    $0x1a4,%eax
+  401896:	3d a4 01 00 00       	cmp    $0x1a4,%eax      #检查返回值是否为410，相等则爆炸
   40189b:	74 0a                	je     4018a7 <phase_4+0x1e2>
   40189d:	b8 01 00 00 00       	mov    $0x1,%eax
-  4018a2:	e9 69 ff ff ff       	jmp    401810 <phase_4+0x14b>
+  4018a2:	e9 69 ff ff ff       	jmp    401810 <phase_4+0x14b>   #成功则返回
   4018a7:	e8 11 04 00 00       	call   401cbd <explode_bomb>
   4018ac:	b8 00 00 00 00       	mov    $0x0,%eax
   4018b1:	e9 5a ff ff ff       	jmp    401810 <phase_4+0x14b>
@@ -623,27 +623,27 @@ Disassembly of section .text:
   4018d4:	e8 77 f8 ff ff       	call   401150 <__isoc99_sscanf@plt>
   4018d9:	83 f8 01             	cmp    $0x1,%eax
   4018dc:	7e 15                	jle    4018f3 <phase_5+0x3d>
-  4018de:	8b 45 fc             	mov    -0x4(%rbp),%eax
-  4018e1:	83 e0 0f             	and    $0xf,%eax
-  4018e4:	89 45 fc             	mov    %eax,-0x4(%rbp)
-  4018e7:	b9 00 00 00 00       	mov    $0x0,%ecx
-  4018ec:	ba 00 00 00 00       	mov    $0x0,%edx
-  4018f1:	eb 1d                	jmp    401910 <phase_5+0x5a>
+  4018de:	8b 45 fc             	mov    -0x4(%rbp),%eax    #获得第一个参数
+  4018e1:	83 e0 0f             	and    $0xf,%eax        #取低四位
+  4018e4:	89 45 fc             	mov    %eax,-0x4(%rbp)    #重新加载到原位置
+  4018e7:	b9 00 00 00 00       	mov    $0x0,%ecx       #记录总和值sum的临时变量
+  4018ec:	ba 00 00 00 00       	mov    $0x0,%edx      #记录查找次数的临时变量
+  4018f1:	eb 1d                	jmp    401910 <phase_5+0x5a>   #跳转到函数主体
   4018f3:	e8 c5 03 00 00       	call   401cbd <explode_bomb>
-  4018f8:	b8 00 00 00 00       	mov    $0x0,%eax
+  4018f8:	b8 00 00 00 00       	mov    $0x0,%eax          #循环变量i初值为0
   4018fd:	eb 2d                	jmp    40192c <phase_5+0x76>
   4018ff:	83 c2 01             	add    $0x1,%edx
   401902:	48 98                	cltq   
-  401904:	8b 04 85 40 22 40 00 	mov    0x402240(,%rax,4),%eax
-  40190b:	89 45 fc             	mov    %eax,-0x4(%rbp)
-  40190e:	01 c1                	add    %eax,%ecx
-  401910:	8b 45 fc             	mov    -0x4(%rbp),%eax
-  401913:	83 f8 0f             	cmp    $0xf,%eax
+  401904:	8b 04 85 40 22 40 00 	mov    0x402240(,%rax,4),%eax   #加载某个数组的A[i]
+  40190b:	89 45 fc             	mov    %eax,-0x4(%rbp)       #传给第一参数
+  40190e:	01 c1                	add    %eax,%ecx            #sum+=A[i]
+  401910:	8b 45 fc             	mov    -0x4(%rbp),%eax     #作为接下来的循环变量
+  401913:	83 f8 0f             	cmp    $0xf,%eax       #检查值是否等于15
   401916:	75 e7                	jne    4018ff <phase_5+0x49>
-  401918:	83 fa 09             	cmp    $0x9,%edx
+  401918:	83 fa 09             	cmp    $0x9,%edx    #检查是否循环了9次，否则继续循环
   40191b:	75 05                	jne    401922 <phase_5+0x6c>
-  40191d:	39 4d f8             	cmp    %ecx,-0x8(%rbp)
-  401920:	74 0c                	je     40192e <phase_5+0x78>
+  40191d:	39 4d f8             	cmp    %ecx,-0x8(%rbp)       #检查是否等于用户输入的参数2
+  401920:	74 0c                	je     40192e <phase_5+0x78>   #不相等则爆炸
   401922:	e8 96 03 00 00       	call   401cbd <explode_bomb>
   401927:	b8 00 00 00 00       	mov    $0x0,%eax
   40192c:	c9                   	leave  
@@ -655,29 +655,29 @@ Disassembly of section .text:
   401935:	f3 0f 1e fa          	endbr64 
   401939:	55                   	push   %rbp
   40193a:	48 89 e5             	mov    %rsp,%rbp
-  40193d:	48 83 ec 60          	sub    $0x60,%rsp
-  401941:	ba 08 00 00 00       	mov    $0x8,%edx
-  401946:	48 8d 75 e0          	lea    -0x20(%rbp),%rsi
-  40194a:	e8 ec 03 00 00       	call   401d3b <read_n_numbers>
+  40193d:	48 83 ec 60          	sub    $0x60,%rsp   #分配空间
+  401941:	ba 08 00 00 00       	mov    $0x8,%edx    #要输入8个整数
+  401946:	48 8d 75 e0          	lea    -0x20(%rbp),%rsi   #传入要输入的数组首地址
+  40194a:	e8 ec 03 00 00       	call   401d3b <read_n_numbers>   #调用读入数字函数
   40194f:	85 c0                	test   %eax,%eax
-  401951:	74 47                	je     40199a <phase_6+0x65>
-  401953:	be 00 00 00 00       	mov    $0x0,%esi
-  401958:	83 fe 07             	cmp    $0x7,%esi
+  401951:	74 47                	je     40199a <phase_6+0x65>   #若未读入规定数目的数字，则跳转到炸弹爆炸
+  401953:	be 00 00 00 00       	mov    $0x0,%esi  #循环变量i
+  401958:	83 fe 07             	cmp    $0x7,%esi    #当i<=7，一直循环
   40195b:	7f 3f                	jg     40199c <phase_6+0x67>
-  40195d:	48 63 c6             	movslq %esi,%rax
-  401960:	8b 4c 85 e0          	mov    -0x20(%rbp,%rax,4),%ecx
-  401964:	8d 41 ff             	lea    -0x1(%rcx),%eax
-  401967:	83 f8 07             	cmp    $0x7,%eax
-  40196a:	77 18                	ja     401984 <phase_6+0x4f>
-  40196c:	83 c6 01             	add    $0x1,%esi
-  40196f:	89 f0                	mov    %esi,%eax
-  401971:	83 f8 07             	cmp    $0x7,%eax
-  401974:	7f e2                	jg     401958 <phase_6+0x23>
-  401976:	48 63 d0             	movslq %eax,%rdx
-  401979:	3b 4c 95 e0          	cmp    -0x20(%rbp,%rdx,4),%ecx
-  40197d:	74 11                	je     401990 <phase_6+0x5b>
-  40197f:	83 c0 01             	add    $0x1,%eax
-  401982:	eb ed                	jmp    401971 <phase_6+0x3c>
+  40195d:	48 63 c6             	movslq %esi,%rax   #将临时变量传递给%rax
+  401960:	8b 4c 85 e0          	mov    -0x20(%rbp,%rax,4),%ecx   #根据索引查找数组元素A[i]
+  401964:	8d 41 ff             	lea    -0x1(%rcx),%eax      #A[i-1]
+  401967:	83 f8 07             	cmp    $0x7,%eax   #比较A[i]-1是否大于7
+  40196a:	77 18                	ja     401984 <phase_6+0x4f>   #若大于则跳转到爆炸
+  40196c:	83 c6 01             	add    $0x1,%esi   #i++
+  40196f:	89 f0                	mov    %esi,%eax    #j=i,作为内层循环变量
+  401971:	83 f8 07             	cmp    $0x7,%eax    #检查是否大于7
+  401974:	7f e2                	jg     401958 <phase_6+0x23>   #内层循环结束返回
+  401976:	48 63 d0             	movslq %eax,%rdx        #传递给临时变量
+  401979:	3b 4c 95 e0          	cmp    -0x20(%rbp,%rdx,4),%ecx    #比较是否不同
+  40197d:	74 11                	je     401990 <phase_6+0x5b>   #若相同则爆炸
+  40197f:	83 c0 01             	add    $0x1,%eax   #j++
+  401982:	eb ed                	jmp    401971 <phase_6+0x3c>   #继续内层循环
   401984:	e8 34 03 00 00       	call   401cbd <explode_bomb>
   401989:	b8 00 00 00 00       	mov    $0x0,%eax
   40198e:	eb 0a                	jmp    40199a <phase_6+0x65>
@@ -685,51 +685,51 @@ Disassembly of section .text:
   401995:	b8 00 00 00 00       	mov    $0x0,%eax
   40199a:	c9                   	leave  
   40199b:	c3                   	ret    
-  40199c:	b8 00 00 00 00       	mov    $0x0,%eax
-  4019a1:	eb 13                	jmp    4019b6 <phase_6+0x81>
-  4019a3:	48 63 c8             	movslq %eax,%rcx
-  4019a6:	ba 09 00 00 00       	mov    $0x9,%edx
-  4019ab:	2b 54 8d e0          	sub    -0x20(%rbp,%rcx,4),%edx
-  4019af:	89 54 8d e0          	mov    %edx,-0x20(%rbp,%rcx,4)
-  4019b3:	83 c0 01             	add    $0x1,%eax
-  4019b6:	83 f8 07             	cmp    $0x7,%eax
+  40199c:	b8 00 00 00 00       	mov    $0x0,%eax     #外层循环索引i
+  4019a1:	eb 13                	jmp    4019b6 <phase_6+0x81>   
+  4019a3:	48 63 c8             	movslq %eax,%rcx     #%rcx=%eax
+  4019a6:	ba 09 00 00 00       	mov    $0x9,%edx    #%rdx赋值为9
+  4019ab:	2b 54 8d e0          	sub    -0x20(%rbp,%rcx,4),%edx  #9-减去A[i]
+  4019af:	89 54 8d e0          	mov    %edx,-0x20(%rbp,%rcx,4)   #重新赋值为q-A[i]    
+  4019b3:	83 c0 01             	add    $0x1,%eax    #i++
+  4019b6:	83 f8 07             	cmp    $0x7,%eax      #与7进行比较，小于等于7则继续循环
   4019b9:	7e e8                	jle    4019a3 <phase_6+0x6e>
-  4019bb:	be 00 00 00 00       	mov    $0x0,%esi
-  4019c0:	eb 18                	jmp    4019da <phase_6+0xa5>
+  4019bb:	be 00 00 00 00       	mov    $0x0,%esi     #循环变量j
+  4019c0:	eb 18                	jmp    4019da <phase_6+0xa5>   #跳转到比较
   4019c2:	48 8b 52 08          	mov    0x8(%rdx),%rdx
-  4019c6:	83 c0 01             	add    $0x1,%eax
-  4019c9:	48 63 ce             	movslq %esi,%rcx
-  4019cc:	39 44 8d e0          	cmp    %eax,-0x20(%rbp,%rcx,4)
-  4019d0:	7f f0                	jg     4019c2 <phase_6+0x8d>
+  4019c6:	83 c0 01             	add    $0x1,%eax     #计数器++
+  4019c9:	48 63 ce             	movslq %esi,%rcx              #存储循环变量
+  4019cc:	39 44 8d e0          	cmp    %eax,-0x20(%rbp,%rcx,4)     #比较A[j]与%rax的值
+  4019d0:	7f f0                	jg     4019c2 <phase_6+0x8d>   #如果大于则指针++
   4019d2:	48 89 54 cd a0       	mov    %rdx,-0x60(%rbp,%rcx,8)
   4019d7:	83 c6 01             	add    $0x1,%esi
-  4019da:	83 fe 07             	cmp    $0x7,%esi
+  4019da:	83 fe 07             	cmp    $0x7,%esi     #比较是否小于等于7，否则循环结束
   4019dd:	7f 0c                	jg     4019eb <phase_6+0xb6>
   4019df:	b8 01 00 00 00       	mov    $0x1,%eax
-  4019e4:	ba 80 42 40 00       	mov    $0x404280,%edx
+  4019e4:	ba 80 42 40 00       	mov    $0x404280,%edx    #传入链表首地址
   4019e9:	eb de                	jmp    4019c9 <phase_6+0x94>
-  4019eb:	48 8b 55 a0          	mov    -0x60(%rbp),%rdx
-  4019ef:	48 89 d6             	mov    %rdx,%rsi
-  4019f2:	b8 01 00 00 00       	mov    $0x1,%eax
+  4019eb:	48 8b 55 a0          	mov    -0x60(%rbp),%rdx    
+  4019ef:	48 89 d6             	mov    %rdx,%rsi       
+  4019f2:	b8 01 00 00 00       	mov    $0x1,%eax     
   4019f7:	eb 12                	jmp    401a0b <phase_6+0xd6>
   4019f9:	48 63 c8             	movslq %eax,%rcx
-  4019fc:	48 8b 4c cd a0       	mov    -0x60(%rbp,%rcx,8),%rcx
-  401a01:	48 89 4e 08          	mov    %rcx,0x8(%rsi)
-  401a05:	83 c0 01             	add    $0x1,%eax
-  401a08:	48 89 ce             	mov    %rcx,%rsi
-  401a0b:	83 f8 07             	cmp    $0x7,%eax
-  401a0e:	7e e9                	jle    4019f9 <phase_6+0xc4>
-  401a10:	48 c7 46 08 00 00 00 	movq   $0x0,0x8(%rsi)
+  4019fc:	48 8b 4c cd a0       	mov    -0x60(%rbp,%rcx,8),%rcx   #取下一个节点
+  401a01:	48 89 4e 08          	mov    %rcx,0x8(%rsi)   #rsi->next=rcx
+  401a05:	83 c0 01             	add    $0x1,%eax     #计数器++
+  401a08:	48 89 ce             	mov    %rcx,%rsi     #移动到下一个节点
+  401a0b:	83 f8 07             	cmp    $0x7,%eax    #比较是否全部处理完
+  401a0e:	7e e9                	jle    4019f9 <phase_6+0xc4>   #继续循环
+  401a10:	48 c7 46 08 00 00 00 	movq   $0x0,0x8(%rsi)     #设置尾节点为null
   401a17:	00 
-  401a18:	b8 00 00 00 00       	mov    $0x0,%eax
-  401a1d:	eb 03                	jmp    401a22 <phase_6+0xed>
-  401a1f:	83 c0 01             	add    $0x1,%eax
-  401a22:	83 f8 06             	cmp    $0x6,%eax
-  401a25:	7f 19                	jg     401a40 <phase_6+0x10b>
-  401a27:	8b 0a                	mov    (%rdx),%ecx
-  401a29:	48 8b 52 08          	mov    0x8(%rdx),%rdx
-  401a2d:	3b 0a                	cmp    (%rdx),%ecx
-  401a2f:	7d ee                	jge    401a1f <phase_6+0xea>
+  401a18:	b8 00 00 00 00       	mov    $0x0,%eax        #循环计数器
+  401a1d:	eb 03                	jmp    401a22 <phase_6+0xed>  
+  401a1f:	83 c0 01             	add    $0x1,%eax    
+  401a22:	83 f8 06             	cmp    $0x6,%eax    #比较是否小于等于6
+  401a25:	7f 19                	jg     401a40 <phase_6+0x10b>  #完成则跳转离开
+  401a27:	8b 0a                	mov    (%rdx),%ecx    #ecx=rdx->value
+  401a29:	48 8b 52 08          	mov    0x8(%rdx),%rdx  #rdx=rdx->next
+  401a2d:	3b 0a                	cmp    (%rdx),%ecx   #比较当前节点与下一个节点值
+  401a2f:	7d ee                	jge    401a1f <phase_6+0xea>    #若小于则爆炸
   401a31:	e8 87 02 00 00       	call   401cbd <explode_bomb>
   401a36:	b8 00 00 00 00       	mov    $0x0,%eax
   401a3b:	e9 5a ff ff ff       	jmp    40199a <phase_6+0x65>
@@ -738,24 +738,24 @@ Disassembly of section .text:
 
 0000000000401a4a <fun7>:
   401a4a:	f3 0f 1e fa          	endbr64 
-  401a4e:	48 85 ff             	test   %rdi,%rdi
-  401a51:	74 2f                	je     401a82 <fun7+0x38>
+  401a4e:	48 85 ff             	test   %rdi,%rdi    #检查输入指针是否为NULL
+  401a51:	74 2f                	je     401a82 <fun7+0x38>    #若未则跳转到末尾并返回
   401a53:	55                   	push   %rbp
   401a54:	48 89 e5             	mov    %rsp,%rbp
-  401a57:	8b 07                	mov    (%rdi),%eax
-  401a59:	39 f0                	cmp    %esi,%eax
-  401a5b:	7f 09                	jg     401a66 <fun7+0x1c>
-  401a5d:	75 14                	jne    401a73 <fun7+0x29>
-  401a5f:	b8 00 00 00 00       	mov    $0x0,%eax
+  401a57:	8b 07                	mov    (%rdi),%eax        #获取二叉树头结点的值
+  401a59:	39 f0                	cmp    %esi,%eax     #比较用户传入的数值与之是否相等
+  401a5b:	7f 09                	jg     401a66 <fun7+0x1c>    #若大于跳转
+  401a5d:	75 14                	jne    401a73 <fun7+0x29>     #不相等则跳转，也就是小于
+  401a5f:	b8 00 00 00 00       	mov    $0x0,%eax     #正好相等返回0
   401a64:	5d                   	pop    %rbp
   401a65:	c3                   	ret    
-  401a66:	48 8b 7f 08          	mov    0x8(%rdi),%rdi
-  401a6a:	e8 db ff ff ff       	call   401a4a <fun7>
-  401a6f:	01 c0                	add    %eax,%eax
+  401a66:	48 8b 7f 08          	mov    0x8(%rdi),%rdi      #左子树根节点地址
+  401a6a:	e8 db ff ff ff       	call   401a4a <fun7>     #调用函数
+  401a6f:	01 c0                	add    %eax,%eax       返回2*ret
   401a71:	eb f1                	jmp    401a64 <fun7+0x1a>
-  401a73:	48 8b 7f 10          	mov    0x10(%rdi),%rdi
-  401a77:	e8 ce ff ff ff       	call   401a4a <fun7>
-  401a7c:	8d 44 00 01          	lea    0x1(%rax,%rax,1),%eax
+  401a73:	48 8b 7f 10          	mov    0x10(%rdi),%rdi    #右子树根节点地址
+  401a77:	e8 ce ff ff ff       	call   401a4a <fun7>     #调用fun7
+  401a7c:	8d 44 00 01          	lea    0x1(%rax,%rax,1),%eax    #获取2*ret+1
   401a80:	eb e2                	jmp    401a64 <fun7+0x1a>
   401a82:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
   401a87:	c3                   	ret    
@@ -764,18 +764,18 @@ Disassembly of section .text:
   401a88:	f3 0f 1e fa          	endbr64 
   401a8c:	55                   	push   %rbp
   401a8d:	48 89 e5             	mov    %rsp,%rbp
-  401a90:	e8 2f 03 00 00       	call   401dc4 <read_line>
-  401a95:	48 89 c7             	mov    %rax,%rdi
+  401a90:	e8 2f 03 00 00       	call   401dc4 <read_line>  #调用读入函数
+  401a95:	48 89 c7             	mov    %rax,%rdi        
   401a98:	ba 0a 00 00 00       	mov    $0xa,%edx
   401a9d:	be 00 00 00 00       	mov    $0x0,%esi
-  401aa2:	e8 89 f6 ff ff       	call   401130 <strtol@plt>
+  401aa2:	e8 89 f6 ff ff       	call   401130 <strtol@plt>   #调用一个系统函数
   401aa7:	89 c6                	mov    %eax,%esi
-  401aa9:	83 e8 01             	sub    $0x1,%eax
-  401aac:	3d e8 03 00 00       	cmp    $0x3e8,%eax
+  401aa9:	83 e8 01             	sub    $0x1,%eax      #减1
+  401aac:	3d e8 03 00 00       	cmp    $0x3e8,%eax    #比较是否小于1000
   401ab1:	77 1b                	ja     401ace <secret_phase+0x46>
-  401ab3:	bf a0 40 40 00       	mov    $0x4040a0,%edi
-  401ab8:	e8 8d ff ff ff       	call   401a4a <fun7>
-  401abd:	83 f8 06             	cmp    $0x6,%eax
+  401ab3:	bf a0 40 40 00       	mov    $0x4040a0,%edi  #传入一个数值
+  401ab8:	e8 8d ff ff ff       	call   401a4a <fun7>  #调用函数
+  401abd:	83 f8 06             	cmp    $0x6,%eax     #比较这个函数的返回值是否等于6，等于则成功
   401ac0:	74 18                	je     401ada <secret_phase+0x52>
   401ac2:	e8 f6 01 00 00       	call   401cbd <explode_bomb>
   401ac7:	b8 00 00 00 00       	mov    $0x0,%eax
@@ -986,27 +986,27 @@ Disassembly of section .text:
   401d45:	41 55                	push   %r13
   401d47:	41 54                	push   %r12
   401d49:	53                   	push   %rbx
-  401d4a:	49 89 fe             	mov    %rdi,%r14
-  401d4d:	49 89 f5             	mov    %rsi,%r13
-  401d50:	41 89 d4             	mov    %edx,%r12d
-  401d53:	bb 00 00 00 00       	mov    $0x0,%ebx
-  401d58:	eb 33                	jmp    401d8d <read_n_numbers+0x52>
-  401d5a:	be e1 23 40 00       	mov    $0x4023e1,%esi
+  401d4a:	49 89 fe             	mov    %rdi,%r14    #%r14保存输入字符串
+  401d4d:	49 89 f5             	mov    %rsi,%r13   #%r13保存数组首地址
+  401d50:	41 89 d4             	mov    %edx,%r12d   #%r12保存读入的数字个数为8
+  401d53:	bb 00 00 00 00       	mov    $0x0,%ebx    #循环变量i
+  401d58:	eb 33                	jmp    401d8d <read_n_numbers+0x52>   #地址跳转
+  401d5a:	be e1 23 40 00       	mov    $0x4023e1,%esi      #循环开始地址
   401d5f:	4c 89 f7             	mov    %r14,%rdi
-  401d62:	e8 29 f4 ff ff       	call   401190 <strtok@plt>
+  401d62:	e8 29 f4 ff ff       	call   401190 <strtok@plt>  #调用切割字符串函数
   401d67:	48 89 c7             	mov    %rax,%rdi
   401d6a:	48 85 ff             	test   %rdi,%rdi
-  401d6d:	74 3b                	je     401daa <read_n_numbers+0x6f>
+  401d6d:	74 3b                	je     401daa <read_n_numbers+0x6f>    
   401d6f:	48 63 c3             	movslq %ebx,%rax
-  401d72:	49 8d 54 85 00       	lea    0x0(%r13,%rax,4),%rdx
+  401d72:	49 8d 54 85 00       	lea    0x0(%r13,%rax,4),%rdx      #获取即将要读入的数据地址
   401d77:	be de 23 40 00       	mov    $0x4023de,%esi
   401d7c:	b8 00 00 00 00       	mov    $0x0,%eax
-  401d81:	e8 ca f3 ff ff       	call   401150 <__isoc99_sscanf@plt>
+  401d81:	e8 ca f3 ff ff       	call   401150 <__isoc99_sscanf@plt>  #读入数据
   401d86:	85 c0                	test   %eax,%eax
   401d88:	7e 20                	jle    401daa <read_n_numbers+0x6f>
-  401d8a:	83 c3 01             	add    $0x1,%ebx
-  401d8d:	44 39 e3             	cmp    %r12d,%ebx
-  401d90:	7d 2b                	jge    401dbd <read_n_numbers+0x82>
+  401d8a:	83 c3 01             	add    $0x1,%ebx                         #i++
+  401d8d:	44 39 e3             	cmp    %r12d,%ebx   #比较是否跳出循环
+  401d90:	7d 2b                	jge    401dbd <read_n_numbers+0x82>   #如果循环结束跳出
   401d92:	85 db                	test   %ebx,%ebx
   401d94:	74 c4                	je     401d5a <read_n_numbers+0x1f>
   401d96:	be e1 23 40 00       	mov    $0x4023e1,%esi
@@ -1106,33 +1106,33 @@ Disassembly of section .text:
   401f1b:	e9 e7 fe ff ff       	jmp    401e07 <read_line+0x43>
 
 0000000000401f20 <phase_defused>:
-  401f20:	f3 0f 1e fa          	endbr64 
+  401f20:	f3 0f 1e fa          	endbr64     #计数变量，当7个阶段全部完成才能跳转
   401f24:	83 3d 45 25 00 00 07 	cmpl   $0x7,0x2545(%rip)        # 404470 <num_input_strings>
   401f2b:	74 01                	je     401f2e <phase_defused+0xe>
   401f2d:	c3                   	ret    
   401f2e:	55                   	push   %rbp
   401f2f:	48 89 e5             	mov    %rsp,%rbp
-  401f32:	48 83 ec 60          	sub    $0x60,%rsp
-  401f36:	4c 8d 45 b0          	lea    -0x50(%rbp),%r8
-  401f3a:	48 8d 4d a8          	lea    -0x58(%rbp),%rcx
-  401f3e:	48 8d 55 ac          	lea    -0x54(%rbp),%rdx
-  401f42:	be 0c 24 40 00       	mov    $0x40240c,%esi
-  401f47:	bf c0 45 40 00       	mov    $0x4045c0,%edi
+  401f32:	48 83 ec 60          	sub    $0x60,%rsp      
+  401f36:	4c 8d 45 b0          	lea    -0x50(%rbp),%r8     #保存变量值
+  401f3a:	48 8d 4d a8          	lea    -0x58(%rbp),%rcx     #保存变量值
+  401f3e:	48 8d 55 ac          	lea    -0x54(%rbp),%rdx     #保存变量值
+  401f42:	be 0c 24 40 00       	mov    $0x40240c,%esi     #要检查输入的格式
+  401f47:	bf c0 45 40 00       	mov    $0x4045c0,%edi    #阶段四我输入的字符串
   401f4c:	b8 00 00 00 00       	mov    $0x0,%eax
-  401f51:	e8 fa f1 ff ff       	call   401150 <__isoc99_sscanf@plt>
+  401f51:	e8 fa f1 ff ff       	call   401150 <__isoc99_sscanf@plt>   #检查输入
   401f56:	83 f8 03             	cmp    $0x3,%eax
-  401f59:	74 16                	je     401f71 <phase_defused+0x51>
+  401f59:	74 16                	je     401f71 <phase_defused+0x51>   #若追加了字符串则跳转
   401f5b:	be 60 23 40 00       	mov    $0x402360,%esi
   401f60:	bf 01 00 00 00       	mov    $0x1,%edi
   401f65:	b8 00 00 00 00       	mov    $0x0,%eax
   401f6a:	e8 01 f2 ff ff       	call   401170 <__printf_chk@plt>
   401f6f:	c9                   	leave  
   401f70:	c3                   	ret    
-  401f71:	be 15 24 40 00       	mov    $0x402415,%esi
+  401f71:	be 15 24 40 00       	mov    $0x402415,%esi   #追加的字符串
   401f76:	48 8d 7d b0          	lea    -0x50(%rbp),%rdi
-  401f7a:	e8 2a fc ff ff       	call   401ba9 <strings_not_equal>
+  401f7a:	e8 2a fc ff ff       	call   401ba9 <strings_not_equal>   #调用看是否相等
   401f7f:	85 c0                	test   %eax,%eax
-  401f81:	75 d8                	jne    401f5b <phase_defused+0x3b>
+  401f81:	75 d8                	jne    401f5b <phase_defused+0x3b>   #不相等则退出
   401f83:	be 00 23 40 00       	mov    $0x402300,%esi
   401f88:	bf 01 00 00 00       	mov    $0x1,%edi
   401f8d:	e8 de f1 ff ff       	call   401170 <__printf_chk@plt>
@@ -1141,7 +1141,7 @@ Disassembly of section .text:
   401f9c:	b8 00 00 00 00       	mov    $0x0,%eax
   401fa1:	e8 ca f1 ff ff       	call   401170 <__printf_chk@plt>
   401fa6:	b8 00 00 00 00       	mov    $0x0,%eax
-  401fab:	e8 d8 fa ff ff       	call   401a88 <secret_phase>
+  401fab:	e8 d8 fa ff ff       	call   401a88 <secret_phase>   #调用隐藏阶段
   401fb0:	eb a9                	jmp    401f5b <phase_defused+0x3b>
 
 Disassembly of section .fini:

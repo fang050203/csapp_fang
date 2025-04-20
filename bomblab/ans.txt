@@ -2,10 +2,10 @@ Disks are constructed from platters.
 587202560 1103709580
 10 20 25 35 47 64 87 119
 49 710
-27 36
+27 34 EWiNpG
 9 60
 2 1 6 4 7 3 5 8
-
+35
 
 
 
