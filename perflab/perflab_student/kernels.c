@@ -53,47 +53,23 @@ void rotate(int dim, pixel *src, pixel *dst)
 {
     //naive_rotate(dim, src, dst);
     // TODO 实现优化后的rotate方法
-    /*int i,j;
-    for (i = 0; i < dim; i += BLOCK) {
+    int i,j;    //定义，两个循环变量
+    for (i = 0; i < dim; i += BLOCK) {   //每次取BLOCK*BLOCK个大小的矩阵进行计算
         for (j = 0; j < dim; j += BLOCK) {
             // 处理每个块
-            int ii;
-            for (ii = i; ii < i + BLOCK && ii < dim; ii++) {
-                int reverse_row = dim - 1 - ii;
-                pixel *src_row = src + ii * dim;
-                pixel *dst_col = dst + reverse_row;
-                // 按行连续写入dst
-                int jj;
-                for (jj = j; jj < j + BLOCK-1 && jj < dim; jj+=2) {
-                    dst_col[jj * dim] = src_row[jj];
-                    dst_col[(jj+1)*dim] = src_row[jj+1];
-                }
-                for(;jj<j+BLOCK && jj < dim;j++)
-                {
-                    dst_col[jj*dim] = src_row[jj];
-                }
-            }
-        }
-    }*/
-    int i,j;
-    for (i = 0; i < dim; i += BLOCK) {
-        for (j = 0; j < dim; j += BLOCK) {
-            // 处理每个块
-            int jj;
+            int jj;   //先索引列，因为写入时可以做到按行访问，避免较大程度的跳跃降低性能
             for (jj = j; jj < j + BLOCK && jj < dim; jj++) {
-                int a= jj*dim;
-                //int reverse_row = dim - 1 - jj;
-                pixel *src_row = src + jj;
+                int a= jj*dim;   //代码移动，减少计算次数
+                pixel *src_row = src + jj;   //采用指针地址索引，避免复杂的地址计算
                 pixel *dst_col = dst + a;
-                // 按行连续写入dst
-                int ii;
+                int ii;   //4x1循环展开，较大程度提高程序性能
                 for (ii = i; ii < i + BLOCK-3 && ii < dim; ii+=4) {
                     dst_col[dim-1-ii] = src_row[ii*dim];
                     dst_col[dim-2-ii] = src_row[(ii+1)*dim];
                     dst_col[dim-3-ii] = src_row[(ii+2)*dim];
                     dst_col[dim-4-ii] = src_row[(ii+3)*dim];
                 }
-                for(;ii<i+BLOCK;ii++)
+                for(;ii<i+BLOCK;ii++)   //末尾处理
                 {
                     dst_col[dim-1-ii] = src_row[ii*dim];
                 }
@@ -239,20 +215,20 @@ void smooth(int dim, pixel *src, pixel *dst)
     // TODO 实现优化后的smooth方法
     int i, j;
     pixel current_pixel;
-    for (i = 1; i < dim-1; i++){
-        int t=dim*i;
+    for (i = 1; i < dim-1; i++){    //先处理除边框司四角之外的中间部分
+        int t=dim*i;    //代码移动，避免重复计算
         int a=(i-1)*dim;
         int b=(i+1)*dim;
         for (j = 1; j < dim-1; j++){
             pixel_sum sum;
-            initialize_pixel_sum(&sum);
+            initialize_pixel_sum(&sum);    //去除条件判断，直接计算求和获取结果
             current_pixel.red = (unsigned short)(((int)src[a+j-1].red+(int)src[a+j].red+(int)src[a+j+1].red+(int)src[t+j].red+(int)src[b+j].red)/5);
             current_pixel.green = (unsigned short)(((int)src[a+j-1].green+(int)src[a+j].green+(int)src[a+j+1].green+(int)src[t+j].green+(int)src[b+j].green) / 5);
             current_pixel.blue = (unsigned short)(((int)src[a+j-1].blue+(int)src[a+j].blue+(int)src[a+j+1].blue+(int)src[t+j].blue+(int)src[b+j].blue) /5);
             dst[t+j] = current_pixel;
         }
     }
-    for(j = 1; j < dim-1; j++)
+    for(j = 1; j < dim-1; j++)     //处理上下两边，除去四角
     {
         int a=dim+j;
         int b=(dim-2)*dim;
@@ -268,7 +244,7 @@ void smooth(int dim, pixel *src, pixel *dst)
         current_pixel.blue = (unsigned short)(((int)src[b+d].blue+(int)src[b+j].blue+(int)src[b+e].blue+(int)src[c+j].blue)/4);
         dst[c+j] = current_pixel; 
     }
-    for(i = 1; i < dim-1; i++)
+    for(i = 1; i < dim-1; i++)    //处理左右两边，除去四角
     {
         int a=(i-1)*dim;
         int b=i*dim;
@@ -284,7 +260,7 @@ void smooth(int dim, pixel *src, pixel *dst)
     }
     //int a=dim*dim;
     int b=(dim-2)*dim;
-    int c=(dim-1)*dim;
+    int c=(dim-1)*dim;    //单独处理四角
     current_pixel.red = (unsigned short)(((int)src[0].red+(int)src[dim].red)/2);
     current_pixel.green = (unsigned short)(((int)src[0].green+(int)src[dim].green)/2);
     current_pixel.blue = (unsigned short)(((int)src[0].blue+(int)src[dim].blue)/2);
