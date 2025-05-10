@@ -87,9 +87,10 @@ void rotate(int dim, pixel *src, pixel *dst)
                 pixel *dst_col = dst + a;
                 // 按行连续写入dst
                 int ii;
-                for (ii = i; ii < i + BLOCK-1 && ii < dim; ii+=2) {
+                for (ii = i; ii < i + BLOCK-2 && ii < dim; ii+=3) {
                     dst_col[dim-1-ii] = src_row[ii*dim];
                     dst_col[dim-2-ii] = src_row[(ii+1)*dim];
+                    dst_col[dim-3-ii] = src_row[(ii+2)*dim];
                 }
                 for(;ii<i+BLOCK;ii++)
                 {
