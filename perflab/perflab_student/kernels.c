@@ -53,7 +53,7 @@ void rotate(int dim, pixel *src, pixel *dst)
 {
     //naive_rotate(dim, src, dst);
     // TODO 实现优化后的rotate方法
-    int i,j;
+    /*int i,j;
     for (i = 0; i < dim; i += BLOCK) {
         for (j = 0; j < dim; j += BLOCK) {
             // 处理每个块
@@ -71,6 +71,29 @@ void rotate(int dim, pixel *src, pixel *dst)
                 for(;jj<j+BLOCK && jj < dim;j++)
                 {
                     dst_col[jj*dim] = src_row[jj];
+                }
+            }
+        }
+    }*/
+    int i,j;
+    for (i = 0; i < dim; i += BLOCK) {
+        for (j = 0; j < dim; j += BLOCK) {
+            // 处理每个块
+            int jj;
+            for (jj = j; jj < j + BLOCK && jj < dim; jj++) {
+                int a= jj*dim;
+                //int reverse_row = dim - 1 - jj;
+                pixel *src_row = src + jj;
+                pixel *dst_col = dst + a;
+                // 按行连续写入dst
+                int ii;
+                for (ii = i; ii < i + BLOCK-1 && ii < dim; ii+=2) {
+                    dst_col[dim-1-ii] = src_row[ii*dim];
+                    dst_col[dim-2-ii] = src_row[(ii+1)*dim];
+                }
+                for(;ii<i+BLOCK;ii++)
+                {
+                    dst_col[dim-1-ii] = src_row[ii*dim];
                 }
             }
         }
