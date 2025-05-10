@@ -54,16 +54,23 @@ void rotate(int dim, pixel *src, pixel *dst)
     //naive_rotate(dim, src, dst);
     // TODO 实现优化后的rotate方法
     int i,j;
-    for (int i = 0; i < dim; i += BLOCK) {
-        for (int j = 0; j < dim; j += BLOCK) {
+    for (i = 0; i < dim; i += BLOCK) {
+        for (j = 0; j < dim; j += BLOCK) {
             // 处理每个块
-            for (int ii = i; ii < i + BLOCK && ii < dim; ii++) {
+            int ii;
+            for (ii = i; ii < i + BLOCK && ii < dim; ii++) {
                 int reverse_row = dim - 1 - ii;
                 pixel *src_row = src + ii * dim;
                 pixel *dst_col = dst + reverse_row;
                 // 按行连续写入dst
-                for (int jj = j; jj < j + BLOCK && jj < dim; jj++) {
+                int jj;
+                for (jj = j; jj < j + BLOCK-1 && jj < dim; jj+=2) {
                     dst_col[jj * dim] = src_row[jj];
+                    dst_col[(jj+1)*dim] = src_row[jj+1];
+                }
+                for(;jj<j+BLOCK && jj < dim;j++)
+                {
+                    dst_col[jj*dim] = src_row[jj];
                 }
             }
         }
@@ -205,45 +212,6 @@ void smooth(int dim, pixel *src, pixel *dst)
 {
     //naive_smooth(dim, src, dst);
     // TODO 实现优化后的smooth方法
-    /*int i, j;
-    for (i = 0; i < dim; i++){
-        int t=dim*i;
-        int a=(i-1)*dim;
-        int b=(i+1)*dim;
-        for (j = 0; j < dim; j++){
-            pixel_sum sum;
-            pixel current_pixel;
-            initialize_pixel_sum(&sum);
-                if (i > 0 && i < dim-1 && j > 0 && j < dim-1) {
-                        // 直接访问5个已知有效位置
-                        sum.red   = (int)src[a+j-1].red+(int)src[a+j].red+(int)src[a+j+1].red+(int)src[t+j].red+(int)src[b+j].red;                
-                        sum.green = (int)src[a+j-1].green+(int)src[a+j].green+(int)src[a+j+1].green+(int)src[t+j].green+(int)src[b+j].green;
-                        sum.blue  = (int)src[a+j-1].blue+(int)src[a+j].blue+(int)src[a+j+1].blue+(int)src[t+j].blue+(int)src[b+j].blue;
-                        sum.num = 5;  // 固定有效点数
-                    }
-                    else {
-                        for (int k = 0; k < 5; k++) {
-                            const int di = offsets[k][0];
-                            const int dj = offsets[k][1];
-                            const int ii = i + di;
-                            const int jj = j + dj;
-                            if (ii >= 0 && ii < dim && jj >= 0 && jj < dim) {
-                                const pixel p = src[RIDX(ii, jj, dim)];
-                                sum.red   += (int)p.red;
-                                sum.green += (int)p.green;
-                                sum.blue  += (int)p.blue;
-                                sum.num++;
-                            }
-                        }
-                    }
-        //assign_sum_to_pixel(&current_pixel, sum);
-        //unsigned int x=div_inv_table[sum.num];
-        current_pixel.red = (unsigned short)(sum.red/sum.num);
-        current_pixel.green = (unsigned short)(sum.green / sum.num);
-        current_pixel.blue = (unsigned short)(sum.blue /sum.num);
-        dst[t+j] = current_pixel;
-        }
-    }*/
     int i, j;
     pixel current_pixel;
     for (i = 1; i < dim-1; i++){
